@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "rss-aggregator",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,5 +12,14 @@
     "url": "git+https://github.com/shalovlivayaHulignka/frontend-project-11"
   },
   "author": "Volkova Ekaterina",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0"
+  }
 }
