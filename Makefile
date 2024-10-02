@@ -1,6 +1,9 @@
 install:
 	npm ci
 
+develop:
+	npx webpack serve
+
 test:
 	npm test
 
