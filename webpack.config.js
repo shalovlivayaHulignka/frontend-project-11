@@ -10,7 +10,7 @@ export default {
   mode: process.env.NODE_ENV || 'development',
   entry: './src/index.js',
   output: {
-    path: path.resolve(dirName, 'dist')
+    path: path.resolve(dirName, 'dist'),
   },
   devServer: {
     open: true,
