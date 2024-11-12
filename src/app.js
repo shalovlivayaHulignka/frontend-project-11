@@ -1,5 +1,7 @@
 import * as yup from 'yup';
+import i18next from 'i18next';
 import view from './view.js';
+import languages from './locales/index.js';
 
 const validateLink = (link, feeds) => {
   const urls = feeds.map((url) => url);
@@ -14,29 +16,45 @@ const validateLink = (link, feeds) => {
 };
 
 const app = () => {
+  const defaultLanguage = 'ru';
+  const i18nextInstance = i18next.createInstance();
+  i18nextInstance.init({
+    lng: defaultLanguage,
+    debug: false,
+    languages,
+  })
+    .then(yup.setLocale({
+      mixed: {
+        notOneOf: () => i18nextInstance.t('errors.existedUrl'),
+      },
+      string: {
+        url: () => i18nextInstance.t('errors.invalidUrl'),
+      },
+    }));
+
   const state = {
+    lng: defaultLanguage,
     form: {
       valid: true,
       processState: 'filling',
       processError: null,
-      errors: {},
+      error: null,
       field: '',
     },
     feeds: [],
   };
 
-  const watchedState = view(state);
+  const watchedState = view(state, i18nextInstance);
   const form = document.querySelector('.rss-form');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const link = formData.get('url');
-    watchedState.field = link;
-    const errors = validateLink(watchedState.field, watchedState.feeds);
-    watchedState.form.errors = errors;
+    const link = formData.get('url').trim();
+    const error = validateLink(link, watchedState.feeds);
+    watchedState.form.error = error;
 
-    if (!errors) {
+    if (!error) {
       watchedState.feeds.push(link);
       watchedState.form.proccessState = 'success';
     } else {

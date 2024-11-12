@@ -1,6 +1,6 @@
 import onChange from 'on-change';
 
-export default (state) => {
+export default (state, i18nextInstance) => {
   const input = document.querySelector('#url-input');
   const feedback = document.querySelector('.feedback');
   const form = document.querySelector('.rss-form');
@@ -10,7 +10,7 @@ export default (state) => {
       switch (value) {
         case 'failed':
           console.log('failed');
-          feedback.textContent = state.form.errors;
+          feedback.textContent = state.form.error;
           input.classList.add('is-invalid');
           feedback.classList.add('text-danger');
           break;

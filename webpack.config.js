@@ -27,14 +27,19 @@ export default {
   },
   module: {
     rules: [
-      { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
       {
-        test: /\.scss$/,
+        test: /\.(js|jsx)$/i,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: 'asset',
+      },
+      {
+        test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          'style-loader',
           'css-loader',
-          'postcss-loader',
-          'sass-loader',
         ],
       },
     ],
