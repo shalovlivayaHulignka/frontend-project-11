@@ -73,7 +73,18 @@ const app = () => {
     feeds: [],
     posts: [],
     links: [],
+    modal: {},
+    id: new Set(),
   };
+
+  const postsContainer = document.querySelector('.posts');
+  postsContainer.addEventListener('click', (e) => {
+    const { id } = e.target.dataset;
+    if (!id) return;
+    status.id.add(id);
+    const { title, description, link } = status.posts[0].filter((item) => item.id === id)[0];
+    status.modal = { title, description, link };
+  });
 
   const status = view(state, i18nextInstance);
   const form = document.querySelector('.rss-form');

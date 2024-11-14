@@ -6,7 +6,10 @@ export default (state, i18nextInstance) => {
     feedback = document.querySelector('.feedback'),
     button = document.querySelector('[type="submit"]'),
     posts = document.querySelector('.posts'),
-    feeds = document.querySelector('.feeds');
+    feeds = document.querySelector('.feeds'),
+    modalTitle = document.querySelector('.modal-title'),
+    modalBody = document.querySelector('.modal-body'),
+    modalLink = document.querySelector('.modal a');
 
   const renderFeeds = () => {
     const card = document.createElement('div');
@@ -65,8 +68,14 @@ export default (state, i18nextInstance) => {
       postTitle.setAttribute('target', '_blank');
       postTitle.dataset.id = post.id;
       postTitle.textContent = post.title;
-      li.append(postTitle);
-
+      const button = document.createElement('button');
+      button.setAttribute('type', 'button');
+      button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'h-100');
+      button.dataset.bsToggle = 'modal';
+      button.dataset.bsTarget = '#modal';
+      button.dataset.id = post.id;
+      button.textContent = i18nextInstance.t('buttons');
+      li.append(postTitle, button);
       return li;
     });
     ul.append(...postsElements);
@@ -75,6 +84,14 @@ export default (state, i18nextInstance) => {
   };
 
   const watchedState = onChange(state, (path, value) => {
+    if (path === 'viewModal') {
+      const { title, description, link } = state.viewModal;
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalLink.setAttribute('href', link);
+      watchedState.processState = 'processed';
+    }
+
     if (path === 'processState') {
       if (value === 'failed') {
         input.focus();
