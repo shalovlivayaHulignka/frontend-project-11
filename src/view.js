@@ -64,18 +64,23 @@ export default (state, i18nextInstance) => {
       const li = document.createElement('li');
       li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'aling-items-start', 'border-0', 'border-end-0');
       const postTitle = document.createElement('a');
+      if (state.id.has(post.id)) {
+        postTitle.classList.add('fw-normal');
+      } else {
+        postTitle.classList.add('fw-bold');
+      }
       postTitle.setAttribute('href', post.link);
       postTitle.setAttribute('target', '_blank');
       postTitle.dataset.id = post.id;
       postTitle.textContent = post.title;
-      const button = document.createElement('button');
-      button.setAttribute('type', 'button');
-      button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'h-100');
-      button.dataset.bsToggle = 'modal';
-      button.dataset.bsTarget = '#modal';
-      button.dataset.id = post.id;
-      button.textContent = i18nextInstance.t('buttons');
-      li.append(postTitle, button);
+      const modalButton = document.createElement('button');
+      modalButton.setAttribute('type', 'button');
+      modalButton.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'h-100');
+      modalButton.dataset.bsToggle = 'modal';
+      modalButton.dataset.bsTarget = '#modal';
+      modalButton.dataset.id = post.id;
+      modalButton.textContent = i18nextInstance.t('buttons.view');
+      li.append(postTitle, modalButton);
       return li;
     });
     ul.append(...postsElements);
@@ -84,8 +89,10 @@ export default (state, i18nextInstance) => {
   };
 
   const watchedState = onChange(state, (path, value) => {
-    if (path === 'viewModal') {
-      const { title, description, link } = state.viewModal;
+    console.log(path);
+    if (path === 'modal') {
+      console.log('test: ', state.modal);
+      const { title, description, link } = state.modal;
       modalTitle.textContent = title;
       modalBody.textContent = description;
       modalLink.setAttribute('href', link);

@@ -3,19 +3,7 @@ import _ from 'lodash';
 import i18next from 'i18next';
 import view from './view.js';
 import languages from './locales/index.js';
-import axios from "axios";
-
-const validateLink = (link, feeds) => {
-  const urls = feeds.map((url) => url);
-  const schema = yup.string().url().notOneOf(urls);
-
-  try {
-    schema.validateSync(link);
-    return null;
-  } catch (e) {
-    return e.message;
-  }
-};
+import axios from 'axios';
 
 const getURL = (url) => {
   const result = new URL('/get', 'https://allorigins.hexlet.app');
@@ -50,9 +38,7 @@ const parseData = (data) => {
 };
 
 const loadUrl = (url) => axios.get(getURL(url))
-  .then((response) => {
-    return parseData(response.data.contents);
-  })
+  .then((response) => parseData(response.data.contents))
   .catch((e) => console.log(e.message));
 
 const app = () => {
@@ -61,7 +47,7 @@ const app = () => {
   i18nextInstance.init({
     lng: 'ru',
     debug: true,
-    resources: languages
+    resources: languages,
   });
 
   const state = {
@@ -77,8 +63,10 @@ const app = () => {
     id: new Set(),
   };
 
+  const status = view(state, i18nextInstance);
   const postsContainer = document.querySelector('.posts');
   postsContainer.addEventListener('click', (e) => {
+    // console.log(status);
     const { id } = e.target.dataset;
     if (!id) return;
     status.id.add(id);
@@ -86,7 +74,6 @@ const app = () => {
     status.modal = { title, description, link };
   });
 
-  const status = view(state, i18nextInstance);
   const form = document.querySelector('.rss-form');
   const schema = yup.string().url().required();
 
@@ -107,13 +94,11 @@ const app = () => {
         status.feeds.push(feed);
         status.posts.push(posts);
         status.processState = 'processed';
-
       })
-      .catch((e) => {
-        status.error = e.message;
+      .catch((error) => {
+        status.error = error.message;
         status.processState = 'failed';
       })
-
   });
 };
 
