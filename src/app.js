@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import _ from 'lodash';
 import i18next from 'i18next';
 import view from './view.js';
 import languages from './locales/index.js';
@@ -82,16 +83,22 @@ const app = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const link = formData.get('url').trim();
-
     schema.notOneOf(status.links).validate(link)
       .then(() => {
         status.processState = 'processing';
         return loadUrl(link);
       })
       .then((data) => {
-        console.log(data);
-        status.links.push(link);
-        status.processState = 'processed';
+        const feedId = _.uniqueId();
+        const { title, description } = data.feed;
+        const feed = { feedId, title, description };
+        const posts = data.posts.map((post) => ({ feedId, id: _.uniqueId(), ...post }));
+        state.feeds.push(feed);
+        state.posts.push(posts);
+        state.links.push(link);
+        state.processState = 'processed';
+        console.log('state: ', state);
+
       })
       .catch((e) => {
         status.error = e.message;
