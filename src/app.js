@@ -90,14 +90,12 @@ const app = () => {
       })
       .then((data) => {
         const feedId = _.uniqueId();
-        const { title, description } = data.feed;
-        const feed = { feedId, title, description };
+        const { name, description } = data.feed;
+        const feed = { feedId, name, description };
         const posts = data.posts.map((post) => ({ feedId, id: _.uniqueId(), ...post }));
-        state.feeds.push(feed);
-        state.posts.push(posts);
-        state.links.push(link);
-        state.processState = 'processed';
-        console.log('state: ', state);
+        status.feeds.push(feed);
+        status.posts.push(posts);
+        status.processState = 'processed';
 
       })
       .catch((e) => {

@@ -29,7 +29,7 @@ export default (state, i18nextInstance) => {
       li.classList.add('list-group-item', 'border-0', 'border-end-0');
       const h3 = document.createElement('h3');
       h3.classList.add('h6', 'm-0');
-      h3.textContent = feed.title;
+      h3.textContent = feed.name;
       const p = document.createElement('p');
       p.classList.add('m-0', 'small', 'text-black-50');
       p.textContent = feed.description;
@@ -40,6 +40,38 @@ export default (state, i18nextInstance) => {
     ul.append(...feedsElements);
     card.append(ul);
     feeds.append(card);
+  };
+
+  const renderPosts = () => {
+    const card = document.createElement('div');
+    card.classList.add('card', 'border-0');
+
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+
+    const cardTitle = document.createElement('h2');
+    cardTitle.classList.add('card-title', 'h4');
+    cardTitle.textContent = i18nextInstance.t('posts');
+
+    cardBody.append(cardTitle);
+    card.append(cardBody);
+    const ul = document.createElement('ul');
+    ul.classList.add('list-group', 'border-0', 'rounded-0');
+    const postsElements = state.posts[0].map((post) => {
+      const li = document.createElement('li');
+      li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'aling-items-start', 'border-0', 'border-end-0');
+      const postTitle = document.createElement('a');
+      postTitle.setAttribute('href', post.link);
+      postTitle.setAttribute('target', '_blank');
+      postTitle.dataset.id = post.id;
+      postTitle.textContent = post.title;
+      li.append(postTitle);
+
+      return li;
+    });
+    ul.append(...postsElements);
+    card.append(ul);
+    posts.append(card);
   };
 
   const watchedState = onChange(state, (path, value) => {
@@ -69,7 +101,7 @@ export default (state, i18nextInstance) => {
         feedback.classList.add('text-success');
         posts.innerHTML = '';
         feeds.innerHTML = '';
-        // renderPosts(watchedState);
+        renderPosts(watchedState);
         renderFeeds(watchedState);
         watchedState.processState = 'finished';
       }
