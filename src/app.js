@@ -23,9 +23,34 @@ const getURL = (url) => {
   return result.toString();
 };
 
+const parseData = (data) => {
+  const parser = new DOMParser();
+  const parsedData = parser.parseFromString(data, 'text/xml');
+  const parsingError = parsedData.querySelector('parsererror');
+  if (parsingError) {
+    throw new Error('errors.invalidRSS');
+  }
+
+  const feed = {
+    name: parsedData.querySelector('title').textContent,
+    description: parsedData.querySelector('description').textContent,
+  };
+
+  const items = [...parsedData.querySelectorAll('item')];
+  const posts = items.map((item) => (
+    {
+      title: item.querySelector('title').textContent,
+      description: item.querySelector('description').textContent,
+      link: item.querySelector('link').textContent,
+    }
+  ));
+
+  return { feed, posts };
+};
+
 const loadUrl = (url) => axios.get(getURL(url))
   .then((response) => {
-    console.log(response.data);
+    return parseData(response.data.contents);
   })
   .catch((e) => console.log(e.message));
 
@@ -63,7 +88,8 @@ const app = () => {
         status.processState = 'processing';
         return loadUrl(link);
       })
-      .then(() => {
+      .then((data) => {
+        console.log(data);
         status.links.push(link);
         status.processState = 'processed';
       })
