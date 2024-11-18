@@ -1,18 +1,18 @@
 import * as yup from 'yup';
 import _ from 'lodash';
+import axios from 'axios';
 import i18next from 'i18next';
 import { setLocale } from 'yup';
 import view from './view.js';
 import languages from './locales/index.js';
-import axios from 'axios';
 
 const addPost = (data) => {
   const feedId = _.uniqueId();
   const { name, description } = data.feed;
   const feed = { feedId, name, description };
   const posts = data.posts.map((post) => ({ feedId, id: _.uniqueId(), ...post }));
-  return {feed, posts };
-}
+  return { feed, posts };
+};
 
 const getURL = (url) => {
   const result = new URL('/get', 'https://allorigins.hexlet.app');
@@ -47,12 +47,16 @@ const parseData = (data) => {
 };
 
 const loadUrl = (url) => axios.get(getURL(url))
-  .catch(() => throw new Error('errors.requestErr'))
+  .catch(() => {
+    throw new Error('errors.requestErr');
+  })
   .then((response) => {
     const parse = parseData(response.data.contents);
     return addPost(parse);
   })
-  .catch((e) => throw new Error(e.message));
+  .catch((e) => {
+    throw new Error(e.message);
+  });
 
 const app = () => {
   const defaultLanguage = 'ru';
@@ -134,7 +138,7 @@ const app = () => {
       .catch((error) => {
         status.error = error.message;
         status.processState = 'failed';
-      })
+      });
   });
 };
 
