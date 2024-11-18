@@ -1,15 +1,15 @@
 import onChange from 'on-change';
 
 export default (state, i18nextInstance) => {
-  const form = document.querySelector('.rss-form'),
-    input = document.querySelector('#url-input'),
-    feedback = document.querySelector('.feedback'),
-    button = document.querySelector('[type="submit"]'),
-    posts = document.querySelector('.posts'),
-    feeds = document.querySelector('.feeds'),
-    modalTitle = document.querySelector('.modal-title'),
-    modalBody = document.querySelector('.modal-body'),
-    modalLink = document.querySelector('.modal a');
+  const form = document.querySelector('.rss-form');
+  const input = document.querySelector('#url-input');
+  const feedback = document.querySelector('.feedback');
+  const button = document.querySelector('[type="submit"]');
+  const posts = document.querySelector('.posts');
+  const feeds = document.querySelector('.feeds');
+  const modalTitle = document.querySelector('.modal-title');
+  const modalBody = document.querySelector('.modal-body');
+  const modalLink = document.querySelector('.modal a');
 
   const renderFeeds = () => {
     const card = document.createElement('div');
