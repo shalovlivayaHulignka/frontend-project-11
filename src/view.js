@@ -60,7 +60,7 @@ export default (state, i18nextInstance) => {
     card.append(cardBody);
     const ul = document.createElement('ul');
     ul.classList.add('list-group', 'border-0', 'rounded-0');
-    const postsElements = state.posts[0].map((post) => {
+    const postsElements = state.posts.map((post) => {
       const li = document.createElement('li');
       li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'aling-items-start', 'border-0', 'border-end-0');
       const postTitle = document.createElement('a');
@@ -89,9 +89,7 @@ export default (state, i18nextInstance) => {
   };
 
   const watchedState = onChange(state, (path, value) => {
-    console.log(path);
     if (path === 'modal') {
-      console.log('test: ', state.modal);
       const { title, description, link } = state.modal;
       modalTitle.textContent = title;
       modalBody.textContent = description;

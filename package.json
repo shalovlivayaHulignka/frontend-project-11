@@ -16,8 +16,11 @@
   "author": "Volkova Ekaterina",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.25.9",
     "@babel/core": "^7.25.2",
+    "@babel/plugin-proposal-throw-expressions": "^7.25.9",
     "@babel/preset-env": "^7.25.4",
+    "@babel/preset-flow": "^7.25.9",
     "@webpack-cli/generators": "^3.0.7",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^9.2.1",
