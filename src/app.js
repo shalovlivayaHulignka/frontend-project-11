@@ -5,58 +5,7 @@ import i18next from 'i18next';
 import { setLocale } from 'yup';
 import view from './view.js';
 import languages from './locales/index.js';
-
-const addPost = (data) => {
-  const feedId = _.uniqueId();
-  const { name, description } = data.feed;
-  const feed = { feedId, name, description };
-  const posts = data.posts.map((post) => ({ feedId, id: _.uniqueId(), ...post }));
-  return { feed, posts };
-};
-
-const getURL = (url) => {
-  const result = new URL('/get', 'https://allorigins.hexlet.app');
-  result.searchParams.set('disableCache', true);
-  result.searchParams.set('url', url);
-  return result.toString();
-};
-
-const parseData = (data) => {
-  const parser = new DOMParser();
-  const parsedData = parser.parseFromString(data, 'text/xml');
-  const parsingError = parsedData.querySelector('parsererror');
-  if (parsingError) {
-    throw new Error('errors.invalidRSS');
-  }
-
-  const feed = {
-    name: parsedData.querySelector('title').textContent,
-    description: parsedData.querySelector('description').textContent,
-  };
-
-  const items = [...parsedData.querySelectorAll('item')];
-  const posts = items.map((item) => (
-    {
-      title: item.querySelector('title').textContent,
-      description: item.querySelector('description').textContent,
-      link: item.querySelector('link').textContent,
-    }
-  ));
-
-  return { feed, posts };
-};
-
-const loadUrl = (url) => axios.get(getURL(url))
-  .catch(() => {
-    throw new Error('errors.requestErr');
-  })
-  .then((response) => {
-    const parse = parseData(response.data.contents);
-    return addPost(parse);
-  })
-  .catch((e) => {
-    throw new Error(e.message);
-  });
+import parser from "./parser.js";
 
 const app = () => {
   const defaultLanguage = 'ru';
@@ -85,12 +34,39 @@ const app = () => {
   };
 
   const status = view(state, i18nextInstance);
+
+  const getURL = (url) => {
+    const result = new URL('/get', 'https://allorigins.hexlet.app');
+    result.searchParams.set('disableCache', true);
+    result.searchParams.set('url', url);
+    return result.toString();
+  };
+
+  const addPost = (data) => {
+    const feedId = _.uniqueId();
+    const { name, description } = data.feed;
+    const feed = { feedId, name, description };
+    const posts = data.posts.map((post) => ({ feedId, id: _.uniqueId(), ...post }));
+    return { feed, posts };
+  };
+
+  const loadUrl = (url) => axios.get(getURL(url))
+    .catch(() => {
+      throw new Error('errors.requestErr');
+    })
+    .then((response) => {
+      const parse = parser(response.data.contents);
+      return addPost(parse);
+    })
+    .catch((e) => {
+      throw new Error(e.message);
+    });
+
   const postsContainer = document.querySelector('.posts');
   postsContainer.addEventListener('click', (e) => {
     const { id } = e.target.dataset;
     if (!id) return;
     status.id.add(id);
-    // const { title, description, link } = status.posts[0].filter((item) => item.id === id)[0];
     const { title, description, link } = status.posts.filter((item) => item.id === id)[0];
     status.modal = { title, description, link };
   });

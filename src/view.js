@@ -118,7 +118,8 @@ export default (state, i18nextInstance) => {
         input.focus();
         input.classList.remove('is-invalid');
         button.classList.remove('disabled');
-        feedback.textContent = i18nextInstance.t('success');
+        console.log(watchedState);
+        feedback.textContent = i18nextInstance.t('RSS успешно загружен');
         feedback.classList.remove('text-danger');
         feedback.classList.add('text-success');
         posts.innerHTML = '';
