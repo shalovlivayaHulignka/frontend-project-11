@@ -5,7 +5,7 @@ import i18next from 'i18next';
 import { setLocale } from 'yup';
 import view from './view.js';
 import languages from './locales/index.js';
-import parser from "./parser.js";
+import parser from './parser.js';
 
 const app = () => {
   const defaultLanguage = 'ru';
